@@ -38,10 +38,9 @@
     </delete>
 
     <select id="findLastTransactions" parameterType="map" resultMap="TransactionResult">
-        SELECT * FROM Transactions
+        SELECT TOP ${limit} * FROM Transactions
         WHERE account_id = #{accountId}
         ORDER BY timestamp DESC
-        LIMIT #{limit}
     </select>
 
 </mapper>
