@@ -1,7 +1,11 @@
 -- Database creation
-DROP DATABASE IF EXISTS ATM;
+IF EXISTS (SELECT name FROM sys.databases WHERE name = 'ATM')
+DROP DATABASE ATM;
+GO
 CREATE DATABASE ATM;
+GO
 USE ATM;
+GO
 
 -- Drop existing tables if rerunning
 DROP TABLE IF EXISTS Transactions;
@@ -11,7 +15,7 @@ DROP TABLE IF EXISTS Users;
 
 -- 1. Users Table
 CREATE TABLE Users (
-    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT PRIMARY KEY IDENTITY(1,1),
     name VARCHAR(100),
     card_number VARCHAR(20) UNIQUE,
     pin VARCHAR(10),
@@ -20,7 +24,7 @@ CREATE TABLE Users (
 
 -- 2. Accounts Table
 CREATE TABLE Accounts (
-    account_id INT PRIMARY KEY AUTO_INCREMENT,
+    account_id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT,
     balance DECIMAL(12,2) DEFAULT 0,
     account_type VARCHAR(20),
@@ -29,18 +33,18 @@ CREATE TABLE Accounts (
 
 -- 3. Transactions Table
 CREATE TABLE Transactions (
-    txn_id INT PRIMARY KEY AUTO_INCREMENT,
+    txn_id INT PRIMARY KEY IDENTITY(1,1),
     account_id INT,
     txn_type VARCHAR(20),
     amount DECIMAL(12,2),
     status VARCHAR(20),
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    timestamp DATETIME DEFAULT GETDATE(),
     FOREIGN KEY (account_id) REFERENCES Accounts(account_id)
 );
 
 -- 4. Bills Table
 CREATE TABLE Bills (
-    bill_id INT PRIMARY KEY AUTO_INCREMENT,
+    bill_id INT PRIMARY KEY IDENTITY(1,1),
     user_id INT,
     bill_type VARCHAR(50),
     amount DECIMAL(12,2),
@@ -76,4 +80,3 @@ INSERT INTO Bills (user_id, bill_type, amount, status) VALUES
 (2, 'water', 45.75, 'unpaid'),
 (2, 'electricity', 90.25, 'unpaid'),
 (3, 'phone', 30.00, 'unpaid');
-
