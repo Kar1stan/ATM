@@ -2,7 +2,7 @@
 
 ## Project Overview:
 -----------------
-This Java-based ATM simulation project provides a simple command-line interface for users to perform basic banking operations such as checking balance, depositing funds, withdrawing money, and exiting the system. It is designed for educational purposes to demonstrate object-oriented programming, user input handling, and modular design in Java.Unlike original this version uses SQL Server Management Studio(SSMS) for ATM database,and configuration of the project is changed to allow it.
+This Java-based ATM simulation project provides a simple command-line interface for users to perform basic banking operations such as checking balance, depositing funds, withdrawing money, and exiting the system. It is designed for educational purposes to demonstrate object-oriented programming, user input handling, and modular design in Java.Unlike original this version uses SQL Server Management Studio(SSMS) for ATM database instead of MySQL Server.
 
 ## Features:
 ---------
