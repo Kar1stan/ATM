@@ -1,7 +1,11 @@
 package com.solvd.atm.services.impl;
 
+import java.sql.Connection;
 import java.util.List;
 import java.util.Random;
+
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 
 import com.solvd.atm.models.Account;
 import com.solvd.atm.models.Bill;
@@ -113,7 +117,37 @@ public class ATMService implements IATMService {
         return transactionService.getLastTransactions(accountId, limit);
     }
 
-    private boolean simulateBankOffline() {
-        return random.nextInt(10) < 2; // 20% шанс оффлайна
+     private boolean simulateBankOffline(String operation, int accountId, double amount) {
+        try (SqlSession session = sqlSessionFactory.openSession()) {
+            Connection conn = session.getConnection();
+
+            // 20% chance of offline
+            if (random.nextInt(10) < 2) {
+                conn.setAutoCommit(false);
+
+                Transaction failedTxn = new Transaction();
+                failedTxn.setAccountId(accountId);
+                failedTxn.setTxnType(operation);
+                failedTxn.setAmount(amount);
+                failedTxn.setStatus("FAILED");
+
+                transactionService.addTransaction(failedTxn);
+
+                conn.rollback();
+
+                System.out.println("ATM went offline during transaction. Auto-commit disabled, rolled back.");
+                return true;
+            }
+
+            try (var stmt = conn.createStatement()) {
+                stmt.execute("SELECT 1");
+            }
+
+            return false;
+
+        } catch (Exception e) {
+            System.err.println("ATM offline due to DB error: " + e.getMessage());
+            return true;
+        }
     }
 }
